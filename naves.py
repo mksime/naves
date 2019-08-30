@@ -1,5 +1,7 @@
 import arcade
 
+VEL_TIRO = 8
+
 class MyGame(arcade.Window):
     def __init__(self):
         super().__init__(fullscreen = True)
@@ -10,6 +12,10 @@ class MyGame(arcade.Window):
 
         self.player_sprite = None
 
+        self.set_mouse_visible(False)
+
+        self.lista_tiros = None
+
     def setup(self):
         self.largura_tela, self.altura_tela = self.get_size()
 
@@ -19,11 +25,15 @@ class MyGame(arcade.Window):
         self.player_sprite.center_x = self.largura_tela // 2
         self.player_sprite.center_y = 50
 
+        self.lista_tiros = arcade.SpriteList()
+
     def on_draw(self):
         
         arcade.start_render()
         arcade.draw_texture_rectangle(self.largura_tela // 2, self.altura_tela // 2, self.largura_tela, self.altura_tela, self.imagem_fundo)
         self.player_sprite.draw()
+
+        self.lista_tiros.draw()
 
     def update(self, delta_time):
         """
@@ -31,7 +41,7 @@ class MyGame(arcade.Window):
         Normally, you'll call update() on the sprite lists that
         need it.
         """
-        pass
+        self.lista_tiros.update()
 
     def on_key_press(self, key, key_modifiers):
         """
@@ -55,7 +65,13 @@ class MyGame(arcade.Window):
         """
         Called when the user presses a mouse button.
         """
-        pass
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            tiro = arcade.Sprite("imagens/laserBlue01.png")
+            tiro.center_x = self.player_sprite.center_x
+            tiro.center_y = self.player_sprite.center_y + 30
+            tiro.angle = 90
+            tiro.change_y = VEL_TIRO
+            self.lista_tiros.append(tiro)
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         """
