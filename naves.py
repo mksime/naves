@@ -1,6 +1,7 @@
 import arcade
+import random
 
-VEL_TIRO = 8
+VEL_TIRO = 5
 
 class MyGame(arcade.Window):
     def __init__(self):
@@ -15,6 +16,7 @@ class MyGame(arcade.Window):
         self.set_mouse_visible(False)
 
         self.lista_tiros = None
+        self.lista_inimigos = None
 
     def setup(self):
         self.largura_tela, self.altura_tela = self.get_size()
@@ -26,6 +28,16 @@ class MyGame(arcade.Window):
         self.player_sprite.center_y = 50
 
         self.lista_tiros = arcade.SpriteList()
+        self.lista_inimigos = arcade.SpriteList()
+
+        for i in range(10):
+            inimigo = arcade.Sprite("imagens/bgspeedship.png")
+            inimigo.center_x = random.randrange(50, self.largura_tela - 50)
+            inimigo.center_y = random.randrange(self.altura_tela + 100, self.altura_tela * 1.5)
+            inimigo.angle = 180
+            inimigo.change_y = -2
+            self.lista_inimigos.append(inimigo)
+
 
     def on_draw(self):
         
@@ -34,6 +46,7 @@ class MyGame(arcade.Window):
         self.player_sprite.draw()
 
         self.lista_tiros.draw()
+        self.lista_inimigos.draw()
 
     def update(self, delta_time):
         """
@@ -42,6 +55,11 @@ class MyGame(arcade.Window):
         need it.
         """
         self.lista_tiros.update()
+        self.lista_inimigos.update()
+
+        for inimigo in self.lista_inimigos:
+	        if inimigo.center_y <= 0:
+	        	inimigo.center_y = random.randrange(self.altura_tela + 100, self.altura_tela * 1.5)
 
     def on_key_press(self, key, key_modifiers):
         """
